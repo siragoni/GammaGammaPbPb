@@ -213,14 +213,14 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserCreateOutputObjects()
   fOutputList->SetOwner(kTRUE);       // memory stuff: the list is owner of all objects it contains and will delete them
   //  counter for events passing each cut
   fCounterH = new TH1F("fCounterH", "fCounterH", 25, -0.5, 24.5);
-  fCounterH->GetXaxis()->SetBinLabel(0, "Total events");
-  fCounterH->GetXaxis()->SetBinLabel(1, "AOD events");
-  fCounterH->GetXaxis()->SetBinLabel(2, "Right trigger");
-  fCounterH->GetXaxis()->SetBinLabel(3, "Right run");
-  fCounterH->GetXaxis()->SetBinLabel(4, "At least one trk");
-  fCounterH->GetXaxis()->SetBinLabel(5, "Two good muons");
-  fCounterH->GetXaxis()->SetBinLabel(6, "OS muons");
-  fCounterH->GetXaxis()->SetBinLabel(7, "All cuts");
+  fCounterH->GetXaxis()->SetBinLabel(1, "Total events");
+  fCounterH->GetXaxis()->SetBinLabel(2, "AOD events");
+  fCounterH->GetXaxis()->SetBinLabel(3, "Right trigger");
+  fCounterH->GetXaxis()->SetBinLabel(4, "Right run");
+  fCounterH->GetXaxis()->SetBinLabel(5, "At least one trk");
+  fCounterH->GetXaxis()->SetBinLabel(6, "Two good muons");
+  fCounterH->GetXaxis()->SetBinLabel(7, "OS muons");
+  fCounterH->GetXaxis()->SetBinLabel(8, "All cuts");
   fOutputList->Add(fCounterH);
   //  counter for tracks passing each cut
   fMuonTrackCounterH = new TH1F("fMuonTrackCounterH", "fMuonTrackCounterH", 10, -0.5, 9.5);

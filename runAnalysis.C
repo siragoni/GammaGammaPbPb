@@ -23,15 +23,15 @@ void runAnalysis(Int_t opt)
   /**
    * RUN ON GRIDTEST:
    */
-  // Bool_t local    = kFALSE;
-  // Bool_t gridTest = kTRUE;
+  Bool_t local    = kFALSE;
+  Bool_t gridTest = kTRUE;
 
 
   /**
    * FULL GRID MOD:
    */
-  Bool_t local    = kFALSE;
-  Bool_t gridTest = kFALSE;
+  // Bool_t local    = kFALSE;
+  // Bool_t gridTest = kFALSE;
 
 
 
@@ -171,12 +171,12 @@ void runAnalysis(Int_t opt)
         // merging: run with "kTRUE" and "full" for normal run
         // to merge on grid run jobs in SetRunMode("terminate")
         // to collect final results set SetMergeViaJDL(kFALSE)
-        // alienHandler->SetMergeViaJDL(kTRUE);
+        alienHandler->SetMergeViaJDL(kTRUE);
 
         /* - The setting to kFALSE is to download the output files
            -
          */
-        alienHandler->SetMergeViaJDL(kFALSE);
+        // alienHandler->SetMergeViaJDL(kFALSE);
         alienHandler->SetMaxMergeStages(3);
 
 
@@ -188,9 +188,9 @@ void runAnalysis(Int_t opt)
         // alienHandler->SetGridWorkingDir("CheckAD_null");
         // alienHandler->SetGridWorkingDir("AD_HWandSW");
         // alienHandler->SetGridWorkingDir("PbPb15o_polPt2_test");
-        if (opt == 0) alienHandler->SetGridWorkingDir("PbPb18q_pol_test7");
-        if (opt == 1) alienHandler->SetGridWorkingDir("PbPb18r_pol_test7");
-        if (opt == 2) alienHandler->SetGridWorkingDir("PbPb15o_pol_test7");
+        if (opt == 0) alienHandler->SetGridWorkingDir("PbPb18q_gg");
+        if (opt == 1) alienHandler->SetGridWorkingDir("PbPb18r_gg");
+        if (opt == 2) alienHandler->SetGridWorkingDir("PbPb15o_gg");
 
         // alienHandler->SetGridOutputDir("myOutputDir");
         if (opt == 0) alienHandler->SetGridOutputDir(LHC18q.Data());
@@ -213,12 +213,12 @@ void runAnalysis(Int_t opt)
             /* - The option FULL is to send the full analysis.
                -
              */
-            // alienHandler->SetRunMode("full");
+            alienHandler->SetRunMode("full");
 
             /* - This option TERMINATE is used for the merging of the files.
                -
              */
-            alienHandler->SetRunMode("terminate");
+            // alienHandler->SetRunMode("terminate");
             mgr->StartAnalysis("grid");
         }
     }

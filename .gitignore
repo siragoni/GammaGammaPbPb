@@ -1,0 +1,8 @@
+*.xml
+*_cxx*
+*.jdl
+*.sh
+my*
+outpu*
+std*
+MC_merge*

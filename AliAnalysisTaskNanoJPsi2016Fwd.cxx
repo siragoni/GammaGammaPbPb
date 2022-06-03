@@ -189,12 +189,12 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserCreateOutputObjects()
 
   fAnaTree ->Branch("fTrkPt1", &fTrkPt1, "fTrkPt1/D");
   fAnaTree ->Branch("fTrkPt2", &fTrkPt2, "fTrkPt2/D");
-  // fAnaTree ->Branch("fTrkEta1", &fTrkEta1, "fTrkEta1/D");
-  // fAnaTree ->Branch("fTrkEta2", &fTrkEta2, "fTrkEta2/D");
-  // fAnaTree ->Branch("fTrkPhi1", &fTrkPhi1, "fTrkPhi1/D");
-  // fAnaTree ->Branch("fTrkPhi2", &fTrkPhi2, "fTrkPhi2/D");
-  // fAnaTree ->Branch("fTrkQ1", &fTrkQ1, "fTrkQ1/D");
-  // fAnaTree ->Branch("fTrkQ2", &fTrkQ2, "fTrkQ2/D");
+  fAnaTree ->Branch("fTrkEta1", &fTrkEta1, "fTrkEta1/D");
+  fAnaTree ->Branch("fTrkEta2", &fTrkEta2, "fTrkEta2/D");
+  fAnaTree ->Branch("fTrkPhi1", &fTrkPhi1, "fTrkPhi1/D");
+  fAnaTree ->Branch("fTrkPhi2", &fTrkPhi2, "fTrkPhi2/D");
+  fAnaTree ->Branch("fTrkQ1", &fTrkQ1, "fTrkQ1/D");
+  fAnaTree ->Branch("fTrkQ2", &fTrkQ2, "fTrkQ2/D");
   // fAnaTree ->Branch("fTrkRabs1", &fTrkRabs1, "fTrkRabs1/D");
   // fAnaTree ->Branch("fTrkRabs2", &fTrkRabs2, "fTrkRabs2/D");
   fAnaTree ->Branch("fCosThetaHE", &fCosThetaHE, "fCosThetaHE/D");
@@ -213,6 +213,13 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserCreateOutputObjects()
   fOutputList->SetOwner(kTRUE);       // memory stuff: the list is owner of all objects it contains and will delete them
   //  counter for events passing each cut
   fCounterH = new TH1F("fCounterH", "fCounterH", 25, -0.5, 24.5);
+  fCounterH->SetBinLabel(0, "Total events");
+  fCounterH->SetBinLabel(1, "AOD events");
+  fCounterH->SetBinLabel(2, "Right trigger");
+  fCounterH->SetBinLabel(3, "Right run");
+  fCounterH->SetBinLabel(4, "At least one trk");
+  fCounterH->SetBinLabel(5, "Two good muons");
+  fCounterH->SetBinLabel(6, "OS muons");
   fOutputList->Add(fCounterH);
   //  counter for tracks passing each cut
   fMuonTrackCounterH = new TH1F("fMuonTrackCounterH", "fMuonTrackCounterH", 10, -0.5, 9.5);
@@ -414,6 +421,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   // general info of the event
   ////////////////////////////////////////////
   Int_t iSelectionCounter = 0; // no selection applied yet
+  // How many events
   fCounterH->Fill(iSelectionCounter); // entering UserExec
   iSelectionCounter++;
 
@@ -429,6 +437,12 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   fTrkTrkPhi = -10;
   fTrkTrkY = -10;
   fTrkTrkM = -10;
+  fTrkEta1 = -10;
+  fTrkEta2 = -10;
+  fTrkPhi1 = -10;
+  fTrkPhi2 = -10;
+  fTrkQ1 = -10;
+  fTrkQ2 = -10;
 
 
   // get AOD event
@@ -439,7 +453,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     PostData(2, fOutputList);
     return;
   }
-  fCounterH->Fill(iSelectionCounter); // AOD event found
+  fCounterH->Fill(iSelectionCounter); // AOD event found (1)
   iSelectionCounter++;
 
 
@@ -464,7 +478,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     PostData(2, fOutputList);
     return;
   }
-  fCounterH->Fill(iSelectionCounter); // right trigger found
+  fCounterH->Fill(iSelectionCounter); // right trigger found (2)
   iSelectionCounter++;
   // trigger inputs
   fL0inputs = fAOD->GetHeader()->GetL0TriggerInputs();
@@ -549,6 +563,8 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     PostData(2, fOutputList);
     return;
   }
+  fCounterH->Fill(iSelectionCounter); // right run (3)
+  iSelectionCounter++;
 
 
   // if (isTriggered[0]) fTriggerCounterFwdH->Fill(fRunNum);
@@ -565,7 +581,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     PostData(2, fOutputList);
     return;
   }
-  fCounterH->Fill(iSelectionCounter); // At least one track
+  fCounterH->Fill(iSelectionCounter); // At least one track (1)
   iSelectionCounter++;
 
   // loop over tracks and select good muons
@@ -622,7 +638,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     delete [] idxPosTrk;
     return;
   }
-  fCounterH->Fill(iSelectionCounter); // valid analysis
+  fCounterH->Fill(iSelectionCounter); // valid analysis (5)
   iSelectionCounter++;
 
   // compute trk+trk kinematics
@@ -630,7 +646,6 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   AliAODTrack *Track2 = NULL;
   if (nGoodPosTrk == 1 && nGoodNegTrk == 1) { // exactly one positive and one negative track
     fCounterH->Fill(iSelectionCounter);
-    iSelectionCounter++;
     Track1 = static_cast<AliAODTrack*>(fAOD->GetTrack(idxPosTrk[0]));
     Track2 = static_cast<AliAODTrack*>(fAOD->GetTrack(idxNegTrk[0]));
   } else if (nGoodPosTrk == 2 && nGoodNegTrk == 0) { //two positive  tracks
@@ -640,6 +655,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     Track1 = static_cast<AliAODTrack*>(fAOD->GetTrack(idxNegTrk[0]));
     Track2 = static_cast<AliAODTrack*>(fAOD->GetTrack(idxNegTrk[1]));
   }
+  iSelectionCounter++; // os muons (6)
 
 
 
@@ -718,6 +734,8 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     PostData(2, fOutputList);
     return;
   }
+  fCounterH->Fill(iSelectionCounter); // after all cuts (7)
+  iSelectionCounter++;
 
 
 
